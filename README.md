@@ -1,81 +1,142 @@
-# Webship-js Skills for Claude Code
+# webship-js Skills
 
-Claude Code skills for automated website testing with
-[webship-js](https://webship.co/docs/webship-js/2.0.x) (Playwright + Cucumber-js).
+AI-assistant skills for automated website testing with
+[webship-js](https://webship.co/docs/webship-js/2.0.x) — a BDD testing
+framework built on **Playwright** + **Cucumber-js**.
 
-## Available Skills
+Works with **Claude Code**, **GitHub Copilot**, **Gemini CLI**, and
+**Codex CLI**. Same Gherkin knowledge, multiple front ends.
 
-| Skill | Command | Description |
-|-------|---------|-------------|
-| Setup | `/webship-js-setup` | Initialize a new webship-js test project |
-| Test | `/webship-js-test` | Create & run BDD tests for a page |
-| Report | `/webship-js-report` | Generate & analyze HTML test reports |
-| Steps | `/webship-js-steps` | Quick reference for all step definitions |
+## Skills
 
-## Installation
+| Skill               | Slash command         | Purpose                                                        |
+|---------------------|-----------------------|----------------------------------------------------------------|
+| Init project        | `/webship-js-init`    | Scaffold a new webship-js project (Node.js or DDEV).           |
+| Create tests        | `/webship-js-create`  | Author `.feature` files for a page (desktop + mobile).         |
+| Run tests           | `/webship-js-run`     | Run the suite, generate HTML report, analyze failures.         |
+| Step reference      | `/webship-js-steps`   | Look up any Given/When/Then step definition.                   |
 
-### Quick Install
+## Install
 
-```bash
-git clone https://github.com/webship/webship-js-skills.git
-cp -r webship-js-skills/.claude/skills/* ~/.claude/skills/
-```
-
-### Project-Level Install
-
-```bash
-cp -r webship-js-skills/.claude/skills/* /path/to/project/.claude/skills/
-```
-
-### Install Script
+### Claude Code
 
 ```bash
 git clone https://github.com/webship/webship-js-skills.git
 cd webship-js-skills
-bash install.sh            # Install globally
-bash install.sh --project /path/to/project  # Install to project
+bash install.sh                            # globally: ~/.claude/skills/
+bash install.sh --project /path/to/proj    # project: <proj>/.claude/skills/
+```
+
+Each skill lives at
+`.claude/skills/<name>/SKILL.md` and is invoked via its slash command.
+
+### GitHub Copilot
+
+```bash
+bash install.sh --copilot                    # globally: ~/.config/github-copilot/
+bash install.sh --copilot --project /path    # project: <proj>/.github/
+```
+
+Installs:
+- `.github/copilot-instructions.md` — codebase-wide guidance.
+- `.github/prompts/webship-js-*.prompt.md` — one file per skill, invokable
+  as a Copilot prompt.
+
+### Gemini CLI
+
+```bash
+bash install.sh --gemini                     # globally: ~/.gemini/
+bash install.sh --gemini --project /path     # project: <proj>/.gemini/
+```
+
+Installs:
+- `.gemini/GEMINI.md` — context loaded on start.
+- `.gemini/commands/webship-js/<name>.toml` — one TOML command per skill,
+  invokable as `/webship-js:<name>`.
+
+### Codex CLI
+
+```bash
+bash install.sh --codex                      # globally: ~/.codex/
+bash install.sh --codex --project /path      # project: <proj>/AGENTS.md + .codex/prompts/
+```
+
+Installs:
+- `AGENTS.md` at the target root — loaded automatically by Codex CLI and
+  by any tool that honors the [AGENTS.md convention](https://agents.md).
+- `.codex/prompts/webship-js-<name>.md` — custom prompt per skill.
+
+### All assistants at once
+
+```bash
+bash install.sh --all                        # globally to every supported tool
+bash install.sh --all --project /path        # all project-scoped files
 ```
 
 ## Usage
 
-In Claude Code, invoke skills with slash commands:
+### Claude Code
 
 ```
-/webship-js-setup https://example.com
-```
-
-```
-/webship-js-test /contact
-```
-
-```
-/webship-js-report @desktop
-```
-
-```
+/webship-js-init --ddev
+/webship-js-create /contact
+/webship-js-run @desktop
 /webship-js-steps form
 ```
 
-## Workflow Example
+### Copilot
+
+```
+@workspace /webship-js-init https://example.com
+@workspace /webship-js-create /contact
+```
+
+### Gemini
+
+```
+/webship-js:init https://example.com
+/webship-js:create /contact
+/webship-js:run @desktop
+/webship-js:steps
+```
+
+### Codex
+
+```
+codex "use webship-js-init for https://example.com"
+codex "use webship-js-create for /contact"
+```
+
+## Typical workflow
 
 ```bash
-# 1. Set up project
-/webship-js-setup https://example.com
+# 1. Scaffold
+/webship-js-init https://example.com
+# or for DDEV:
+/webship-js-init --ddev
 
-# 2. Create tests for the contact page
-/webship-js-test /contact
+# 2. Author tests for a page
+/webship-js-create /contact
 
-# 3. Run tests and get report
-/webship-js-report
+# 3. Run + analyze
+/webship-js-run
+# or with a tag filter:
+/webship-js-run "@desktop and @validation"
 
 # 4. Look up step syntax
-/webship-js-steps api
+/webship-js-steps form
 ```
 
 ## Requirements
 
-- [Claude Code](https://claude.com/claude-code) CLI
-- Node.js >= 20.0
+- Node.js >= 20.0 (webship-js `engines` requirement).
+- One of: Claude Code, GitHub Copilot, Gemini CLI, or Codex CLI.
+
+## webship-js version
+
+Built for **webship-js 2.0.x**. Step regex may change between minor
+releases — the skills load the installed `node_modules/webship-js/` source
+as the authoritative reference.
 
 ## License
 
