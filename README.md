@@ -15,6 +15,7 @@ Works with **Claude Code**, **GitHub Copilot**, **Gemini CLI**, and
 | Create tests        | `/webship-js-create`  | Author `.feature` files for a page (desktop + mobile).         |
 | Run tests           | `/webship-js-run`     | Run the suite, generate HTML report, analyze failures.         |
 | Step reference      | `/webship-js-steps`   | Look up any Given/When/Then step definition.                   |
+| Audit patterns      | `/webship-js-audit`   | Review `.feature` + custom step files for patterns + anti-patterns. |
 
 ## Install
 

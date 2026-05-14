@@ -28,7 +28,7 @@ while [ $# -gt 0 ]; do
   shift
 done
 
-SKILL_NAMES=(webship-js-init webship-js-create webship-js-run webship-js-steps)
+SKILL_NAMES=(webship-js-init webship-js-create webship-js-run webship-js-steps webship-js-audit)
 
 if [ -n "$PROJECT" ]; then
   target="$PROJECT/.claude/skills"
