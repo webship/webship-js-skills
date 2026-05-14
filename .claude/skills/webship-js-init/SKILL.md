@@ -1,11 +1,11 @@
 ---
 name: webship-js-init
-description: Initialize a webship-js test project for a target website (plain Node.js or inside a DDEV project). Scaffolds cucumber.js, playwright.config.ts, tsconfig.json, and the tests/ tree. Idempotent — preserves existing files.
+description: Initialize a webship-js test project for a target website (plain Node.js or inside a DDEV project). Scaffolds cucumber.js, playwright.config.ts, tsconfig.json, the tests/ tree, screenshots/ + videos/ dirs, and merges test scripts into package.json. Idempotent — preserves existing files.
 ---
 
 # /webship-js-init — Initialize a webship-js test project
 
-Scaffold a [webship-js 2.0.x](https://webship.co/docs/webship-js/2.0.x) project
+Scaffold a [webship-js](https://webship.co/docs/webship-js/2.0.x) project
 for automated website testing.
 
 ## Arguments
@@ -127,11 +127,12 @@ If missing, fetch the same files from
 
 ```
 <project>/
-├── cucumber.js
-├── playwright.config.ts
-├── tsconfig.json
-├── package.json                  # scripts merged in
+├── cucumber.js                   # config + worldParameters (selectors, screenshot, video, javascript, diffy)
+├── playwright.config.ts          # browser + viewport (null = use breakpoints) + chromium args
+├── tsconfig.json                 # tsx loader (replaces ts-node)
+├── package.json                  # scripts merged: test, test:chromium/firefox/webkit, test:headed, test:fast, generate-reports
 ├── screenshots/                  # auto-created on failure
+├── videos/                       # when worldParameters.video.mode != 'off'
 └── tests/
     ├── features/
     │   ├── check-homepage.feature
@@ -144,6 +145,34 @@ If missing, fetch the same files from
         └── README.md
 ```
 
+## Scaffold conventions to verify
+
+Don't assume — check what the installed `init-webship-js` actually writes
+(it may evolve between releases). Recent defaults to look for:
+
+- `requireModule: ['tsx/cjs']` (replaces older `ts-node/register`).
+- Step `timeout` raised above Playwright's default so Playwright errors
+  surface first.
+- Cucumber-js v10+ — color via `FORCE_COLOR` env; `colorsEnabled` removed.
+- Playwright `viewport: null` + `--start-maximized` (chromium); viewport
+  sized per-scenario via the breakpoint registry.
+- Scripts: `test`, `test:chromium`, `test:firefox`, `test:webkit`,
+  `test:headed` (`HEADLESS=false`), `test:fast` (`SLOW_MO=0`),
+  `generate-reports`.
+- `worldParameters` blocks worth knowing about:
+  - `video` — `mode: off|on|on-failure|tag`, `dir`, `size`, `filenamePattern`.
+  - `javascript` — `mode: warn|fail|off`, `levels`, `ignore`,
+    `beforeScenario`, `afterScenario`.
+  - `screenshot` — `dir`, `onFailed`, `onEveryStep`, `purge`,
+    `filenamePattern`, `filenamePatternFailed`.
+  - `selectors` — `css`, `xpath`, `files`, `filesPath`, `offset`,
+    `breakpoints`.
+  - `diffy` — visual regression integration.
+- Deps pulled by webship-js may include `@axe-core/playwright`, `axe-core`,
+  `ajv`, `ajv-formats`, `js-yaml`, `tsx`.
+
+`cat node_modules/webship-js/cucumber.js` to confirm before suggesting edits.
+
 ## Requirements
 
 - Node.js >= 20.0 (enforced by webship-js `engines`).
@@ -152,12 +181,13 @@ If missing, fetch the same files from
 
 ## Verify
 
-1. `cucumber.js` `require:` includes both
-   `node_modules/webship-js/tests/step-definitions/**/*.js` and
-   `tests/step-definitions/**/*.js`.
-2. `package.json` has `test`, `test:chromium`, `test:firefox`,
-   `test:webkit`, `generate-reports` scripts.
-3. `tests/features/check-homepage.feature` exists and runs green:
+1. `cucumber.js` `require:` includes
+   `node_modules/webship-js/tests/step-definitions/**/*.js` (and
+   `tests/step-definitions/**/*.js` for custom steps).
+2. `cucumber.js` uses `requireModule: ['tsx/cjs']`.
+3. `package.json` has `test`, `test:chromium`, `test:firefox`,
+   `test:webkit`, `test:headed`, `test:fast`, `generate-reports` scripts.
+4. `tests/features/check-homepage.feature` exists and runs green:
    `LAUNCH_URL=<url> npm run test:chromium`.
 
 Report the project path, target URL, and next-step command.

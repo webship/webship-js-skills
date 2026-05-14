@@ -1,6 +1,6 @@
 ---
 name: webship-js-create
-description: Create webship-js BDD tests for a website page. Explores the page, authors .feature files with desktop+mobile scenarios, registers named selectors, handles AJAX timing, and runs the new suite.
+description: Author webship-js BDD tests for a website page. Explores the page, writes .feature files with desktop+mobile scenarios, registers named selectors, picks the right step category from the installed catalog (UI, web-first, API/REST, a11y, iframe, clock, network, cookies, storage, video, XML/YAML), handles AJAX timing, and runs the new suite.
 ---
 
 # /webship-js-create — Author tests for a page
@@ -31,17 +31,47 @@ Create comprehensive BDD test scenarios for a website page using
 
 ### 2. Local webship-js source (source of truth for step phrasing)
 
-- `node_modules/webship-js/tests/step-definitions/webship.js` — UI steps.
-- `node_modules/webship-js/tests/step-definitions/webship-api.js` — API steps.
-- `node_modules/webship-js/tests/step-definitions/webship-selectors.js` —
-  named-selector registry + relative-position + viewport breakpoints.
-- `node_modules/webship-js/tests/step-definitions/webship-screenshot.js` —
-  screenshot steps.
-- `node_modules/webship-js/tests/features/*.feature` — reference for natural
-  Gherkin phrasing and category naming.
+Recent webship-js is modular — one `<category>.steps.js` per category in
+`node_modules/webship-js/tests/step-definitions/`. List what's installed
+first (`ls node_modules/webship-js/tests/step-definitions/`), then read the
+files relevant to the page under test:
 
-If not installed locally, fetch from
-`https://github.com/webship/webship-js/tree/2.0.x`.
+- `navigation.steps.js`, `path.steps.js`, `action.steps.js` — go-to / back /
+  pointer / drag / tap.
+- `form.steps.js`, `input.steps.js`, `field.steps.js` — fill / select /
+  check / radio / multi-value / color / WYSIWYG / datetime.
+- `wait.steps.js` — AJAX, network-idle, element appear/disappear, eventual.
+- `assertion.steps.js`, `element.steps.js`, `link.steps.js` — visible-text,
+  element existence, link href.
+- `web-first.steps.js` — auto-wait assertions
+  (`"<sel>" should be visible/contain text/have value within N seconds`).
+- `modal.steps.js`, `dialog.steps.js` — in-page modals + browser
+  alert/confirm/prompt.
+- `iframe.steps.js` — switch / click / fill inside iframe.
+- `selectors.steps.js` — named-selector registry, relative position,
+  viewport breakpoints, focus/selection.
+- `responsive.steps.js` — explicit viewport sizing.
+- `keyboard.steps.js` — key + chord presses.
+- `screenshot.steps.js`, `video.steps.js` — capture.
+- `cookie.steps.js`, `storage.steps.js` — cookies + local/session storage.
+- `network.steps.js` — mock URL responses, offline/online, request
+  recording.
+- `clock.steps.js` — system time + advance.
+- `auth.steps.js` — basic-auth + save/restore Playwright auth state.
+- `api.steps.js`, `rest.steps.js`, `response.steps.js` — HTTP requests +
+  headers + JSON.
+- `xml.steps.js`, `yaml.steps.js` — XML/YAML response assertions +
+  JSON-Schema match.
+- `a11y.steps.js` — axe-core audit + structural checks.
+- `table.steps.js` — row/column/sort/contents.
+- `file-download.steps.js` — verify downloaded files + zip contents.
+- `metatag.steps.js` — `<meta>` attribute assertions.
+- `javascript.steps.js` — JS-error capture.
+- `debug.steps.js` — `print current URL`, `print last response`.
+
+Plus `node_modules/webship-js/tests/features/*.feature` for real usage
+samples. If not installed locally, fetch the same files from
+https://github.com/webship/webship-js/tree/2.0.x.
 
 ### 3. Current project
 
@@ -78,9 +108,25 @@ Name files `<page-slug>--<category>.feature` under `tests/features/`:
 - `--form-invalid-<field>.feature` — invalid input shows validation.
 - `--form-valid-<variant>.feature` — submit with required-only, then all fields.
 - `--links.feature` — key links exist with correct `href`.
+- `--a11y.feature` — axe-core audit + structural a11y checks.
+- `--mobile.feature` — mobile-only viewport coverage.
 
-Tag scenarios: `@desktop`, `@mobile`, `@validation`, `@submission`,
-`@links`, `@smoke`.
+Tag scenarios:
+
+| Tag             | Use                                              |
+|-----------------|--------------------------------------------------|
+| `@desktop`      | Desktop viewport (pair with `xl` screen).        |
+| `@mobile`       | Mobile viewport (pair with `xs` screen).         |
+| `@smoke`        | Minimum-viable run.                              |
+| `@validation`   | Empty / invalid form submits.                    |
+| `@submission`   | Valid form submits.                              |
+| `@links`        | Link / href checks.                              |
+| `@a11y`         | Accessibility audits.                            |
+| `@video`        | Force-record this scenario.                      |
+| `@no-video`     | Suppress recording.                              |
+| `@js-fail`      | Fail if JS error captured during scenario.       |
+| `@js-warn`      | Warn only (default).                             |
+| `@js-off`       | Suppress JS-error capture.                       |
 
 ### Phase 3 — write scenarios
 
@@ -149,22 +195,70 @@ Scenario: Email link uses mailto
   Then the "Email us" link should contain "mailto:hello@example.com"
 ```
 
+Example — web-first assertion (auto-waits, less flaky than explicit waits):
+
+```gherkin
+@desktop @submission
+Scenario: Submit shows success without explicit wait
+  Given I am on "/contact"
+  When I fill in "email" with "user@example.com"
+  And I press "Submit"
+  Then ".success-message" should be visible within 5 seconds
+  And ".success-message" should contain text "Thanks for your message"
+```
+
+Example — accessibility audit:
+
+```gherkin
+@desktop @a11y
+Scenario: Contact page meets WCAG AA
+  Given I am on "/contact"
+  Then the page should have a title
+  And the page should declare a language
+  And every form field should have an accessible label
+  And the page should pass an accessibility audit at level "AA"
+```
+
+Example — network-mocked SPA:
+
+```gherkin
+@desktop
+Scenario: Dashboard renders user list from mocked API
+  Given the URL "/api/users" returns the JSON:
+    """
+    [{ "id": 1, "name": "Rajab" }]
+    """
+  Given I am on "/dashboard"
+  Then "h1" should have text "Welcome, Rajab" within 5 seconds
+```
+
 ### Phase 4 — handle edge cases
 
-- **AJAX / form submit.** `When I press "Submit"` only clicks. Always chain
-  `And I wait for AJAX to finish` or `And I wait until the page is loaded`
-  before asserting on the result.
-- **Auto-dismissing messages.** If the site fades status messages (e.g.
-  Drupal), lower `worldParameters.minWaitTime.page` from `3000` to `500` so
-  the assertion runs before the message disappears.
+- **Prefer web-first.** When in doubt, use
+  `Then "<selector>" should be visible/contain text/have value within N seconds`
+  (`web-first.steps.js`). Auto-waits, way less flaky than chaining
+  `wait for AJAX to finish`.
+- **AJAX / form submit.** `When I press "Submit"` only clicks. Chain
+  `And I wait for AJAX to finish`, `And I wait until the page is loaded`,
+  or a web-first assertion before asserting on the result.
+- **Auto-dismissing messages.** Lower `worldParameters.minWaitTime.page`
+  from `3000` to `500` so assertions run before the message fades.
 - **Rate limiting / flood control.** Write a custom step in
-  `tests/step-definitions/custom.js` that accepts either outcome (e.g. polls
-  for success message OR rate-limit text).
-- **HTML attributes.** `Then the response should contain` checks text, not
-  attributes. Use the link-by-attribute form for hrefs:
-  `Then the "contact" link should contain "mailto:" by its "href" attribute`.
-- **Duplicate text.** Scope assertions with named selectors:
-  `Then I should see "Saved" in the "success message" element`.
+  `tests/step-definitions/custom.js` that polls for either outcome
+  (success OR rate-limit text).
+- **HTML attributes.** `the response should contain` checks **text**, not
+  attributes. Use either the link-by-attribute form
+  (`Then the "contact" link should contain "mailto:" by its "href" attribute`)
+  or the element-attribute form
+  (`Then the element ".cta" with the attribute "data-test" and the value "primary" should exist`).
+- **Duplicate text.** Scope assertions with named selectors or web-first:
+  `Then "#success" should contain text "Saved" within 3 seconds`.
+- **Iframes.** Always `When I switch to the iframe "<sel>"` first, then run
+  `... inside the iframe` steps, then `When I switch to the root document`.
+- **Time-dependent UI.** Use clock steps
+  (`Given the system time is "..."`, `When I advance the clock by N minutes`).
+- **External APIs in CI.** Mock with `Given the URL "..." returns the JSON:`
+  rather than hitting real services.
 
 ### Phase 5 — run
 
@@ -179,6 +273,12 @@ npx cucumber-js --config cucumber.js tests/features/contact--form-empty-submit.f
 npx cucumber-js --config cucumber.js --tags "@desktop and @validation"
 # different browser
 BROWSER=firefox npm test
+# watch the browser (debug)
+npm run test:headed
+# fastest run (no slow-mo)
+npm run test:fast
+# record video of failures
+WEBSHIP_VIDEO=on-failure npm test
 ```
 
 DDEV:
