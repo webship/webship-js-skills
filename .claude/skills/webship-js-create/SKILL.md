@@ -92,7 +92,7 @@ The book *Automated Functional Testing Recipes* (v1.0.86). Look for it in this o
 `.claude/automated-functional-testing-recipes/` in the current project, `~/.claude/automated-functional-testing-recipes/`
 (the installers of these skills put it there), or
 `automated-functional-testing-recipes/` in a checkout of https://github.com/webship/webship-js-skills. Read
-`README.md` (the table of contents), then the chapters for this skill:
+the chapters for this skill (one file per chapter, named by its subject):
 
 - `ch03-gherkin-deep-dive.md`: Gherkin, Background, outlines, tags.
 - `ch04-first-real-test-suite.md`: the first real suite, end to end.
