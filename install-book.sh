@@ -1,8 +1,8 @@
 #!/bin/bash
 # Install the book "Automated Functional Testing Recipes" next to the skills.
 #
-# The skills read the book as their knowledge base (table of contents in
-# README.md, then the chapter that matches the task). The per-assistant
+# The skills read the book as their knowledge base (one file per
+# chapter, named by its subject; it reads the chapter that matches the task). The per-assistant
 # installers call this script; it copies automated-functional-testing-recipes/ to:
 #
 #   <root>/.claude/automated-functional-testing-recipes/

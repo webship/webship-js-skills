@@ -83,8 +83,8 @@ the complete step definition reference, web-first assertions, debugging, CI, and
 patterns vs antipatterns.
 
 Its Markdown sources live in [`automated-functional-testing-recipes/`](automated-functional-testing-recipes/) in this
-repository: `automated-functional-testing-recipes/README.md` is the table of contents,
-one file per chapter and appendix, and the whole book in one file,
+repository: `automated-functional-testing-recipes/README.md` says what the folder holds;
+there is one file per chapter and appendix, and the whole book in one file,
 `automated-functional-testing-recipes/Automated-Functional-Testing-Recipes-v1.0.86-complete.md`.
 The files are copied as published and are not edited here.
 
