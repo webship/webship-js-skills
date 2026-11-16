@@ -49,6 +49,19 @@ https://github.com/webship/webship-js/tree/2.0.x.
 - `tests/step-definitions/*.js` — user custom steps.
 - `package.json` — merge, never clobber.
 
+### 4. The book
+
+The book *Automated Functional Testing Recipes* (v1.0.86). Look for it in this order and use the first that exists:
+`.claude/automated-functional-testing-recipes/` in the current project, `~/.claude/automated-functional-testing-recipes/`
+(the installers of these skills put it there), or
+`automated-functional-testing-recipes/` in a checkout of https://github.com/webship/webship-js-skills. Read
+`README.md` (the table of contents), then the chapters for this skill:
+
+- `ch02-setting-up-webship-js.md`: install, scaffold, configuration.
+- `ch04-first-real-test-suite.md`: what a first suite looks like.
+- `ch19-organizing-large-test-suite.md`: layout for multi-role suites.
+- `ch25-cicd-integration.md`: wiring the suite into CI.
+
 ## Instructions
 
 ### Path A — plain Node.js (`$target` is a URL)
@@ -155,26 +168,25 @@ Things to look for after install — don't recommend what isn't installed:
 
 ## Add a `worldParameters.users` registry (multi-role suites)
 
-For CMS / multi-role apps (e.g. Drupal / Varbase pattern), seed
+For CMS / multi-role apps (the Drupal pattern), seed
 `worldParameters.users` at scaffold time:
 
 ```js
 worldParameters: {
   launchUrl: process.env.LAUNCH_URL || '$target',
   users: {
-    "Normal user":    { email: "test.authenticated@example.com", password: "TestPass1!" },
-    "Content editor": { email: "test.content_editor@example.com", password: "TestPass1!" },
-    "Content admin":  { email: "test.content_admin@example.com",  password: "TestPass1!" },
-    "Site admin":     { email: "test.site_admin@example.com",     password: "TestPass1!" },
-    "Super admin":    { email: "test.super_admin@example.com",    password: "TestPass1!" }
+    "Normal user":    { email: "test.authenticated@example.com", password: process.env.TEST_USER_PASSWORD },
+    "Content editor": { email: "test.content_editor@example.com", password: process.env.TEST_USER_PASSWORD },
+    "Content admin":  { email: "test.content_admin@example.com",  password: process.env.TEST_USER_PASSWORD },
+    "Site admin":     { email: "test.site_admin@example.com",     password: process.env.TEST_USER_PASSWORD },
+    "Super admin":    { email: "test.super_admin@example.com",    password: process.env.TEST_USER_PASSWORD }
   },
   // ...
 }
 ```
 
 Pair with a `Given I am a logged in user with the "<role>" user` custom
-step (see `/webship-js-create` for the implementation pattern). We learned
-this approach from experimenting on Varbase / Varbase-project — it
+step (see `/webship-js-create` for the implementation pattern). This approach
 collapses dozens of repeated login scenes into a single registry plus one
 helper.
 
