@@ -62,6 +62,18 @@ https://github.com/webship/webship-js/tree/2.0.x.
    - `tests/features/*.feature` (existing patterns to stay consistent
      with).
 
+5. **The book** *Automated Functional Testing Recipes* (v1.0.86). Look for it in this order and use the first that exists:
+   `.claude/automated-functional-testing-recipes/` in the current project, `~/.claude/automated-functional-testing-recipes/`
+   (the installers of these skills put it there), or
+   `automated-functional-testing-recipes/` in a checkout of https://github.com/webship/webship-js-skills. Read
+   `README.md` (the table of contents), then the chapters for this skill:
+
+   - `ch33-complete-step-definition-reference.md`: every step, by category.
+   - `appendix-b-quick-reference.md`: the one-page cheat sheet.
+   - `ch36-web-first-assertions.md`: auto-wait matchers.
+   - `ch34-advanced-selectors.md`: selector phrasings.
+   - `ch17-custom-step-definitions.md`: when no built-in step exists.
+
 Steps below reflect the catalog at the time of writing. **Verify against
 the installed source — skip anything that's not there.** Every step
 supports `I` / `we` pronouns (optional). `the`, `a`, `an` tokens are
@@ -146,7 +158,7 @@ When I fill in "message" with:
 When I fill in "user@example.com" for "email"
 When I fill in the following:
   | Email | user@example.com |
-  | Name  | Rajab            |
+  | Name  | Ada              |
 When I select "Option 1" from "Country"
 When I additionally select "Option 2" from "Countries"
 When I check "Accept terms"
@@ -247,7 +259,7 @@ When I set the system time to "2026-06-15T12:00:00Z"
 ```gherkin
 Given the URL "**/api/users" returns the JSON:
   """
-  [{ "id": 1, "name": "Rajab" }]
+  [{ "id": 1, "name": "Ada" }]
   """
 Given the URL "/api/users/42" returns status 404
 Given the URL "/api/users/42" returns status 500 with body "boom"
@@ -400,7 +412,7 @@ Then the response header "Content-Type" should contain the value "application/js
 Given a REST header "Authorization" with value "Bearer xyz"
 When I send a REST "POST" request to "https://api.example.com/users" with body:
   """
-  { "name": "Rajab" }
+  { "name": "Ada" }
   """
 Then the REST response status code should be 200
 
@@ -419,13 +431,13 @@ Then the response should be valid JSON
 
 ```gherkin
 Given the response content from the file "fixtures/users.xml"
-Then the XML element "/users/user[@id='1']" should be equal to "Rajab"
+Then the XML element "/users/user[@id='1']" should be equal to "Ada"
 Then the XML attribute "id" on element "/users/user" should be equal to "1"
 
 Given the YAML response content from the file "fixtures/cfg.yml"
-Then the YAML element "users.0.name" should be equal to "Rajab"
+Then the YAML element "users.0.name" should be equal to "Ada"
 Then the YAML value at "users.0.age" should be greater than 18
-Then the YAML array at "users" should contain an item where "name" is "Rajab"
+Then the YAML array at "users" should contain an item where "name" is "Ada"
 Then the YAML should match JSON Schema "schemas/user.json"
 ```
 
@@ -437,7 +449,7 @@ Then the table ".orders" should contain the following columns:
   | Order # | Customer | Total | Status |
 Then the table ".orders" should be sorted by "Total" in "descending" order
 Then the "Order #123" row should contain the following:
-  | Customer | Rajab |
+  | Customer | Ada |
 ```
 
 ### Accessibility — `a11y.steps.js` (`docs/10-accessibility.md`)
@@ -529,10 +541,9 @@ Then print current URL
 Then print last response
 ```
 
-## Varbase / multi-role custom steps to know
+## Multi-role CMS custom steps to know
 
-We learned a lot by experimenting and working on Varbase /
-Varbase-project. The custom steps that paid off:
+The custom steps that pay off on multi-role CMS suites:
 
 ```gherkin
 # Reads worldParameters.users[<role>]:
