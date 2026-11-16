@@ -14,6 +14,9 @@
 #   bash install.sh --gemini  [--project P]  # Gemini CLI
 #   bash install.sh --codex   [--project P]  # Codex CLI
 #   bash install.sh --all     [--project P]  # all four
+#
+# Each of them also copies automated-functional-testing-recipes/ (the skills' knowledge base) to
+# <root>/.claude/automated-functional-testing-recipes/ through install-book.sh.
 
 set -e
 
