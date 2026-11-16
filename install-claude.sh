@@ -42,3 +42,10 @@ for name in "${SKILL_NAMES[@]}"; do
   cp "$SKILLS_DIR/$name/SKILL.md" "$target/$name/SKILL.md"
 done
 echo "[claude] installed to $target/"
+
+# The book the skills read as their knowledge base (see install-book.sh).
+if [ -n "$PROJECT" ]; then
+  bash "$SCRIPT_DIR/install-book.sh" --project "$PROJECT"
+else
+  bash "$SCRIPT_DIR/install-book.sh"
+fi

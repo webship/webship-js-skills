@@ -60,6 +60,11 @@ or the 2.0.x branch at https://github.com/webship/webship-js.
 
 Always wait after submits (`And I wait for AJAX to finish`). Use the
 link-by-attribute form for href/src assertions.
+
+Knowledge base: the book "Automated Functional Testing Recipes" is at
+`.claude/automated-functional-testing-recipes/` (project) or `~/.claude/automated-functional-testing-recipes/`
+(global). Read its `README.md`, then the chapter that matches the task,
+before writing scenarios or step definitions.
 EOF
 
 for name in "${SKILL_NAMES[@]}"; do
@@ -73,3 +78,10 @@ for name in "${SKILL_NAMES[@]}"; do
   } > "$dst"
 done
 echo "[gemini] installed to $target/"
+
+# The book the skills read as their knowledge base (see install-book.sh).
+if [ -n "$PROJECT" ]; then
+  bash "$SCRIPT_DIR/install-book.sh" --project "$PROJECT"
+else
+  bash "$SCRIPT_DIR/install-book.sh"
+fi

@@ -66,9 +66,21 @@ Critical rules:
 2. For `href`/`src` use the link-by-attribute form, not `response should contain`.
 3. DDEV projects run tests via `ddev npm run test:*`, not host `npm`.
 4. `npx init-webship-js` is idempotent — preserve user files.
+
+Knowledge base: the book "Automated Functional Testing Recipes" is at
+`.claude/automated-functional-testing-recipes/` (project) or `~/.claude/automated-functional-testing-recipes/`
+(global). Read its `README.md`, then the chapter that matches the task,
+before writing scenarios or step definitions.
 EOF
 
 for name in "${SKILL_NAMES[@]}"; do
   cp "$SKILLS_DIR/$name/SKILL.md" "$target/prompts/$name.prompt.md"
 done
 echo "[copilot] installed to $target/"
+
+# The book the skills read as their knowledge base (see install-book.sh).
+if [ -n "$PROJECT" ]; then
+  bash "$SCRIPT_DIR/install-book.sh" --project "$PROJECT"
+else
+  bash "$SCRIPT_DIR/install-book.sh"
+fi

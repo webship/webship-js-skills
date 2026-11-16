@@ -74,6 +74,29 @@ bash install.sh --all                        # globally to every supported tool
 bash install.sh --all --project /path        # all project-scoped files
 ```
 
+## The book
+
+The skills' knowledge base is the book *Automated Functional Testing Recipes*
+(v1.0.86): BDD with Gherkin, setting up webship-js, recipes for navigation, forms,
+waits, modals, tables, authentication and API testing, custom step definitions,
+the complete step definition reference, web-first assertions, debugging, CI, and
+patterns vs antipatterns.
+
+Its Markdown sources live in [`automated-functional-testing-recipes/`](automated-functional-testing-recipes/) in this
+repository: `automated-functional-testing-recipes/README.md` is the table of contents,
+one file per chapter and appendix, and the whole book in one file,
+`automated-functional-testing-recipes/Automated-Functional-Testing-Recipes-v1.0.86-complete.md`.
+The files are copied as published and are not edited here.
+
+Every installer also copies `automated-functional-testing-recipes/` next to the skills,
+to `~/.claude/automated-functional-testing-recipes/` (global) or
+`<project>/.claude/automated-functional-testing-recipes/` (project), for all four
+assistants (`install-book.sh` does the copy). Each skill reads the table of
+contents, then the chapter that matches its task, before writing scenarios or
+step definitions. The installed webship-js package stays the source of truth for
+step phrasing; when the book and the package differ, the skills follow the
+package and say so.
+
 ## Usage
 
 ### Claude Code

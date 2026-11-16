@@ -71,6 +71,10 @@ This repository uses [webship-js 2.0.x](https://webship.co/docs/webship-js/2.0.x
 - DDEV projects: run tests via `ddev npm run test:*` or `ddev exec`.
 - `npx init-webship-js` is idempotent; keep user files unless `--force` is
   explicitly requested.
+- Knowledge base: the book "Automated Functional Testing Recipes" is at
+  `.claude/automated-functional-testing-recipes/` (project) or `~/.claude/automated-functional-testing-recipes/`
+  (global). Read its `README.md`, then the chapter that matches the task,
+  before writing scenarios or step definitions.
 
 ## Commands
 
@@ -98,3 +102,10 @@ for name in "${SKILL_NAMES[@]}"; do
   cp "$SKILLS_DIR/$name/SKILL.md" "$target_prompts/$name.md"
 done
 echo "[codex] AGENTS.md at $root/AGENTS.md; prompts at $target_prompts/"
+
+# The book the skills read as their knowledge base (see install-book.sh).
+if [ -n "$PROJECT" ]; then
+  bash "$SCRIPT_DIR/install-book.sh" --project "$PROJECT"
+else
+  bash "$SCRIPT_DIR/install-book.sh"
+fi
