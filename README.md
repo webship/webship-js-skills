@@ -153,7 +153,7 @@ codex "use webship-js-create for /contact"
 
 ## Requirements
 
-- Node.js >= 20.0 (webship-js `engines` requirement).
+- Node.js >= 24.0 (webship-js `engines` requirement).
 - One of: Claude Code, GitHub Copilot, Gemini CLI, or Codex CLI.
 
 ## webship-js version

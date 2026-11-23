@@ -212,7 +212,7 @@ Then scenarios reference selectors by canonical name (`primary button`,
 
 ## Requirements
 
-- Node.js >= 20.0 (enforced by webship-js `engines`).
+- Node.js >= 24.0 (enforced by webship-js `engines`).
 - Linux: `npx playwright install --with-deps chromium` the first time
   (skip in DDEV — Dockerfile handles it).
 
